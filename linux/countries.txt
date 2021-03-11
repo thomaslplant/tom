@@ -1,7 +1,0 @@
-england,london,gbp,english 
-usa,washington,usd,english 
-china,beijing,rnb,chinese 
-germany,berlin,euro,german 
-france,paris,euro,french 
-italy,rome,euro,italian 
-canada,ottawa,cad,english/French
