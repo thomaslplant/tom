@@ -1,0 +1,35 @@
+{% extends 'main.html' %}
+{% block body %}
+<html>
+    <head>Customer</head>
+    <body>
+        <div class='form'>
+            <form method='POST' action=''>
+                {{ form.hidden_tag() }}
+                {{ form.name.label }} {{ form.name }}
+                <br>
+                {{ form.is_old_enough.label }} {{ form.is_old_enough }}
+                <br>
+                {{ form.submit }}
+            {{ message }}
+            </form>
+        
+            </div>
+        <h2>CustomerTable</h2>
+        <table>
+          {% for person in customers %}
+            <tr>
+              <td>
+                {{person.name}} 
+              </td>
+              <td>
+                  {{person.is_old_enough}}
+              </td>
+            </tr>
+            {% endfor %}
+        </table>
+        
+    </body>
+</html>
+<a href="{{ url_for('homepage') }}">Back to Homepage</a> 
+{% endblock body %}

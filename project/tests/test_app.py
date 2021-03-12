@@ -11,25 +11,25 @@ class TestBase(TestCase):
                 )
         return app
 
-    def setUp(self):
+    def start_test(self):
         db.create_all()
 
-        sample1 = Customer(name="Jeff Brown", is_old_enough=True)
-        sample2 = Bartender(name="Peter Wilson", start_date="2018-01-31", position="Team Leader", rate_of_pay=9.40)
-        sample3 = Drinks(beverage_name="Peroni", price=3.99, alcohol_percent=5.0, units_of_alcohol=1.7)
-        sample4 = Payment(payment_type="Debit Card", bank="Barclays", account_number=18231723, sort_code=128374, cvv=987)
+        test1 = Customer(name="Jeff Brown", is_old_enough=True)
+        test2 = Bartender(name="Peter Wilson", start_date="2018-01-31", position="Team Leader", rate_of_pay=9.40)
+        test3 = Drinks(beverage_name="Peroni", price=3.99, alcohol_percent=5.0, units_of_alcohol=1.7)
+        test4 = Payment(payment_type="Debit Card", bank="Barclays", account_number=18231723, sort_code=128374, cvv=987)
 
-        db.session.add(sample1)
-        db.session.add(sample2)
-        db.session.add(sample3)
-        db.session.add(sample4)
+        db.session.add(test1)
+        db.session.add(test2)
+        db.session.add(test3)
+        db.session.add(test4)
         db.session.commit()
 
-        sample5 = Orders(quantity=1, order_cost=3.99, datetime_of_order="2021-03-10 15:13:30", customer_id=1, beverage_id=1, employee_id=1, payment_id=1)
+        test5 = Orders(quantity=1, order_cost=3.99, datetime_of_order="2021-03-10 15:13:30", customer_id=1, beverage_id=1, employee_id=1, payment_id=1)
 
-        db.session.add(sample5)
+        db.session.add(test5)
         db.session.commit()
 
-    def tearDown(self):
+    def end_test(self):
         db.session.remove()
         db.drop_all()
