@@ -4,7 +4,7 @@
     <head>Customer</head>
     <body>
         <div class='form'>
-            <form method='POST' action=''>
+            <form method='POST' action='/'>
                 {{ form.hidden_tag() }}
                 {{ form.name.label }} {{ form.name }}
                 <br>
@@ -15,7 +15,7 @@
             </form>
         
             </div>
-        <h2>CustomerTable</h2>
+        <h2>Customer Table</h2>
         <table>
           {% for person in customers %}
             <tr>
@@ -28,8 +28,8 @@
             </tr>
             {% endfor %}
         </table>
-        
+
     </body>
 </html>
-<a href="{{ url_for('homepage') }}">Back to Homepage</a> 
+
 {% endblock body %}

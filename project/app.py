@@ -8,7 +8,7 @@ db = SQLAlchemy(app)
 
 # # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:root@34.89.77.106/CocktailBar"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-# app.config['SQLALchemy_DATABASE_URI'] = "sqlite:///"
+app.config['SQLALchemy_DATABASE_URI'] = "sqlite:///"
 # app.config['SECRET_KEY'] = "TEST"
 
 
@@ -72,7 +72,7 @@ def add_customer():
     if request.method == 'POST':
         name = form.name.data
         is_old_enough = form.is_old_enough.data
-        
+        person = CustomerTable(name=form.name.data, is_old_enough=form.is_old_enough.data)
 
         if bool(is_old_enough) == False:
             error = "Customer must be 18 or over"
@@ -82,21 +82,18 @@ def add_customer():
             else:
                 return  render_template('customer.html', form=form, message=error)
                 
-    person = CustomerTable(name=form.name.data, is_old_enough=form.is_old_enough.data)
-    db.session.add(person)
-    db.session.commit()
-    customers = CustomerTable.query.all()
+                db.session.add(person)
+                # db.session.add(is_old_enough=form.is_old_enough.data)
+                db.session.commit()
+                customers = CustomerTable.query.all()
+ 
+    
 
+    
     return render_template('customer.html', form=form, message=error)
     
     
-
-
-# class Customer_table(db.Model):
-#     name = db.Column(db.String(30), nullable=False, primary_key=True)
-#     is_old_enough = db.Column(db.Boolean, nullable=False)
-
-# db.create_all
+db.create_all()
 
 # @app.route('/customer', methods=['GET','POST'])
 # def add_customer():
