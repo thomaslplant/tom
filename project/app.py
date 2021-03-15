@@ -60,7 +60,7 @@ class CustomerTable(db.Model):
     is_old_enough = db.Column(db.Boolean, nullable=False)
 
 class CustomerForm(FlaskForm):
-    name = StringField('Full Name')
+    name = StringField('Full Name ')
     is_old_enough = BooleanField('Is over 18')
     submit = SubmitField('Enter Details')
 
@@ -108,10 +108,11 @@ def add_customer():
         else:
             db.session.add(person)
             db.session.commit()
-            return render_template('customer.html', form=form, message=error)
+            return render_template('customer.html', all_customers=all_customers, form=form, message=error, title="Add Customer")
 
- 
-    return render_template('customer.html', customers=all_customers, form=form, message=error)
+
+
+    return render_template('customer.html', all_customers=all_customers, form=form, message=error)
 
 db.create_all()
 

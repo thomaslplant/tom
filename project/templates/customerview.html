@@ -3,7 +3,17 @@
 {{ title }}
 <br>
 <h2>Customer Table</h2>
-
+<table>
+  {% for person in all_customers %}
+    <tr>
+      <td>
+        {{person.name}}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+</body>
+</html>
 <a href="{{ url_for('add_customer') }}">Customers</a>
 <a href="{{ url_for('homepage') }}">Home</a>
 {% endblock body %}

@@ -1,12 +1,12 @@
 {% extends 'main.html' %}
 {% block body %}
 <html>
-  <head>Add Customer</head>
+  <h2>Add Customer</h2>
   <body>
     <div class='form'>
       <form method='POST' action='/customer'>
           {{ form.hidden_tag() }}
-          {{ form.name.label }} {{ form.name }}
+          {{ form.name.label }}{{ form.name }}
           <br>
           {{ form.is_old_enough.label }} {{ form.is_old_enough }}
           <br>
@@ -21,6 +21,9 @@
           <tr>
             <td>
               {{person.name}}
+            </td>
+            <td>
+              {{person.is_old_enough}}
             </td>
           </tr>
         {% endfor %}
