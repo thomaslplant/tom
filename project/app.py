@@ -1,14 +1,14 @@
-from flask import Flask, redirect, render_template, request
+from flask import Flask, redirect, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField
+from wtforms import StringField, SubmitField, BooleanField, DateField, FloatField
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
 
 # # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:root@34.89.77.106/CocktailBar"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
-app.config['SQLALchemy_DATABASE_URI'] = "sqlite:///"
+app.config['SQLALchemy_DATABASE_URI'] = "sqlite:///data.db"
 # app.config['SECRET_KEY'] = "TEST"
 
 
@@ -50,7 +50,7 @@ app.config['SQLALchemy_DATABASE_URI'] = "sqlite:///"
 #     employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('bartender.employee_id'))
 #     payment_id = db.Column('payment_id', db.Integer, db.ForeignKey('payment.payment_id'))
 
-from application import routes
+# from application import routes
 
 app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
 
@@ -64,49 +64,57 @@ class CustomerForm(FlaskForm):
     is_old_enough = BooleanField('Is over 18')
     submit = SubmitField('Enter Details')
 
-@app.route('/customer', methods=['GET', 'POST'])
-def add_customer():
-    error = ""
-    form = CustomerForm()
+class Bartender(db.Model):
+    employee_id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    start_date = db.Column(db.Date, nullable=False)
+    position = db.Column(db.String(50), nullable=False)
+    rate_of_pay = db.Column(db.Float, nullable=False)
 
-    if request.method == 'POST':
-        name = form.name.data
-        is_old_enough = form.is_old_enough.data
-        person = CustomerTable(name=form.name.data, is_old_enough=form.is_old_enough.data)
-
-        if bool(is_old_enough) == False:
-            error = "Customer must be 18 or over"
-        else:
-            if len(name) == 0:
-                error = "Please fill in all fields"
-            else:
-                return  render_template('customer.html', form=form, message=error)
-                
-                db.session.add(person)
-                # db.session.add(is_old_enough=form.is_old_enough.data)
-                db.session.commit()
-                customers = CustomerTable.query.all()
- 
-    
-
-    
-    return render_template('customer.html', form=form, message=error)
-    
-    
-db.create_all()
-
-# @app.route('/customer', methods=['GET','POST'])
-# def add_customer():
-#     if request.form:
-#         person = CustomerForm(name=request.form.get("name"), is_old_enough=request.form.get("18 or over"))
-#         db.session.add(person)
-#         db.session.commit()
-#     registrees =Customer_table.query.all()
-#     return render_template("home.html", registrees=registrees)
+class BartenderForm(FlaskForm):
+    name = StringField('Employee name')
+    start_date = DateField('Start date')
+    position = StringField('Employee position')
+    rate_of_pay = FloatField('Hourly pay')
+    submit = SubmitField('Enter details')
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
     return render_template('home.html', title="Homepage")
+
+@app.route('/bartender', methods=['GET', 'POST'])
+def add_bartender():
+    return render_template('bartender.html', title="Bartender")
+
+@app.route('/customerview', methods=['GET', 'POST'])
+def customer_view():
+    return render_template('customerview.html', title="Customer View")
+
+@app.route('/customer', methods=['GET', 'POST'])
+def add_customer():
+    error = ""
+    form = CustomerForm()
+    all_customers = CustomerTable.query.all()
+   
+    if request.method == 'POST':
+        name = form.name.data
+        is_old_enough = form.is_old_enough.data
+        person = CustomerTable(name=form.name.data, is_old_enough=form.is_old_enough.data )
+
+        if len(name) == 0:
+            error = "Please enter your name"
+        elif bool(is_old_enough) == False:
+            error = "Not old enough"
+        else:
+            db.session.add(person)
+            db.session.commit()
+            return render_template('customer.html', form=form, message=error)
+
+ 
+    return render_template('customer.html', customers=all_customers, form=form, message=error)
+
+db.create_all()
+
 
 if __name__=='__main__':
     app.run(debug=True, host='0.0.0.0')

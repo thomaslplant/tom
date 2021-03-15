@@ -1,0 +1,9 @@
+{% extends 'main.html' %}
+{% block body %}
+{{ title }}
+<br>
+<h2>Customer Table</h2>
+
+<a href="{{ url_for('add_customer') }}">Customers</a>
+<a href="{{ url_for('homepage') }}">Home</a>
+{% endblock body %}

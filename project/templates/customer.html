@@ -1,35 +1,30 @@
 {% extends 'main.html' %}
 {% block body %}
 <html>
-    <head>Customer</head>
-    <body>
-        <div class='form'>
-            <form method='POST' action='/'>
-                {{ form.hidden_tag() }}
-                {{ form.name.label }} {{ form.name }}
-                <br>
-                {{ form.is_old_enough.label }} {{ form.is_old_enough }}
-                <br>
-                {{ form.submit }}
-            {{ message }}
-            </form>
-        
-            </div>
-        <h2>Customer Table</h2>
-        <table>
-          {% for person in customers %}
-            <tr>
-              <td>
-                {{person.name}} 
-              </td>
-              <td>
-                  {{person.is_old_enough}}
-              </td>
-            </tr>
-            {% endfor %}
-        </table>
-
-    </body>
+  <head>Add Customer</head>
+  <body>
+    <div class='form'>
+      <form method='POST' action='/customer'>
+          {{ form.hidden_tag() }}
+          {{ form.name.label }} {{ form.name }}
+          <br>
+          {{ form.is_old_enough.label }} {{ form.is_old_enough }}
+          <br>
+          {{ form.submit }}
+          {{ message }}
+        </form>
+      </div>
+        <a href="{{ url_for('homepage') }}">Home</a>
+      <h2>Customers</h2>
+      <table>
+        {% for person in all_customers %}
+          <tr>
+            <td>
+              {{person.name}}
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+  </body>
 </html>
-
 {% endblock body %}
