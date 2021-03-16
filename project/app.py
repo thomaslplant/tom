@@ -67,7 +67,7 @@ class CustomerForm(FlaskForm):
     is_old_enough = BooleanField('Is over 18')
     submit = SubmitField('Enter Details')
 
-class Bartender(db.Model):
+class BartenderTable(db.Model):
     employee_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     start_date = db.Column(db.Date, nullable=False)
@@ -84,10 +84,6 @@ class BartenderForm(FlaskForm):
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
     return render_template('home.html', title="Homepage")
-
-@app.route('/bartender', methods=['GET', 'POST'])
-def add_bartender():
-    return render_template('bartender.html', title="Bartender")
 
 @app.route('/customer/view', methods=['GET', 'POST'])
 def customer_view():
@@ -146,7 +142,62 @@ def delete_customer(customer_id):
 
 
 
+@app.route('/bartender/view', methods=['GET', 'POST'])
+def view_bartender():
+    return render_template('bartender.html', title="Bartender")
 
+@app.route('/bartender', methods=['GET', 'POST'])
+def add_bartender():
+    error = ""
+    form = BartenderForm()
+    all_bartenders = BartenderTable.query.all()
+    if request.method == 'POST':
+        name = form.name.data
+        start_date = form.start_date.data
+        position = form.position.data
+        rate_of_pay = form.rate_of_pay.data
+        employee = BartenderTable(name=form.name.data, start_date=form.start_date.data, position=form.position.data, rate_of_pay=form.rate_of_pay.data)
+        
+        if len(name) == 0:
+            error = "Please enter your full name"
+        elif len(position) == 0:
+            error = "Please enter your position/job title"
+        elif float(rate_of_pay) == 0.00:
+            error = "Please enter your hourly pay"
+        else:
+            db.session.add(employee)
+            db.session.commit()
+            return render_template('bartenderview.html', all_bartenders=all_bartenders, form=form, message=error, title="Add Bartender")
+
+    return render_template('bartender.html', all_bartenders=all_bartenders, form=form, message=error)
+
+@app.route('/bartender/update/<int:employee_id>', methods=['POST', 'GET'])
+def update_bartender(employee_id):
+    bartender_to_update = BartenderTable.query.get_or_404(employee_id)
+    form = BartenderForm()
+    if request.method == 'POST':
+        bartender_to_update.name = request.form["name"]
+        bartender_to_update.start_date = request.form["start_date"]
+        bartender_to_update.position = request.form["position"]
+        bartender_to_update.rate_of_pay = request.form["rate_of_pay"]
+        try:
+            db.session.commit()
+            return redirect('/bartender')
+        except:
+            return "Update Unsuccessful"
+    else:
+        return render_template('bartenderupdate.html', bartender_to_update=bartender_to_update)
+
+@app.route('/bartender/delete/<int:employee_id>')
+def delete_bartender(employee_id):
+    bartender_to_delete = BartenderTable.query.get_or_404(employee_id)
+
+    try:
+        db.session.delete(bartender_to_delete)
+        db.session.commit()
+        return redirect('/bartender')
+    except:
+        return "The Bartender couldn't be deleted!"
 
 db.create_all()
 
