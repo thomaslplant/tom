@@ -133,6 +133,20 @@ def update_customer(customer_id):
     else:
         return render_template('customerupdate.html', customer_to_update=customer_to_update)
 
+@app.route('/customer/delete/<int:customer_id>')
+def delete_customer(customer_id):
+    customer_to_delete = CustomerTable.query.get_or_404(customer_id)
+
+    try:
+        db.session.delete(customer_to_delete)
+        db.session.commit()
+        return redirect('/customer')
+    except:
+        return "The Customer couldn't be deleted!"
+
+
+
+
 
 db.create_all()
 

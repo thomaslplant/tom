@@ -5,9 +5,11 @@
       <h2>Customers</h2>
       <table border="1">
         <col width="100">
-          <col width="100">
-            <col width="200">
-        <th>First Name</th><th>Second Name</th><th>Are old enough to drink</th><th>Update</th>
+          <col width="115">
+            <col width="175">
+              <col width="75">
+                <col width="75">
+        <th>First Name</th><th>Second Name</th><th>Is old enough to drink</th><th>Update</th><th>Delete</th>
         {% for person in all_customers %}
           <tr>
             <td>
@@ -21,6 +23,9 @@
             </td>
             <td>
               <a href="customer/update/{{person.customer_id}}">Update</a>
+            </td>
+            <td>
+              <a href="customer/delete/{{person.customer_id}}">Delete</a>
             </td>
           </tr>
         {% endfor %}
