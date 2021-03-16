@@ -1,33 +1,45 @@
 {% extends 'main.html' %}
 {% block body %}
 <html>
-  <h2>Add Customer</h2>
   <body>
-    <div class='form'>
+      <h2>Customers</h2>
+      <table border="1">
+        <col width="100">
+          <col width="100">
+            <col width="200">
+        <th>First Name</th><th>Second Name</th><th>Are old enough to drink</th><th>Update</th>
+        {% for person in all_customers %}
+          <tr>
+            <td>
+              {{person.first_name}} 
+            </td>
+            <td>
+              {{person.last_name}}
+            </td>
+            <td>
+              {{person.is_old_enough}}
+            </td>
+            <td>
+              <a href="customer/update/{{person.customer_id}}">Update</a>
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+     <h2>Add Customer</h2>
+     <div class='form'>
       <form method='POST' action='/customer'>
           {{ form.hidden_tag() }}
-          {{ form.name.label }}{{ form.name }}
+          {{ form.first_name.label }}{{ form.first_name }}
           <br>
-          {{ form.is_old_enough.label }} {{ form.is_old_enough }}
+          {{ form.last_name.label }}{{form.last_name }}
+          <br>
+          {{ form.is_old_enough.label }}{{ form.is_old_enough }}
           <br>
           {{ form.submit }}
           {{ message }}
         </form>
       </div>
-        <a href="{{ url_for('homepage') }}">Home</a>
-      <h2>Customers</h2>
-      <table>
-        {% for person in all_customers %}
-          <tr>
-            <td>
-              {{person.name}}
-            </td>
-            <td>
-              {{person.is_old_enough}}
-            </td>
-          </tr>
-        {% endfor %}
-     </table>
+      <a href="{{ url_for('homepage') }}">Home</a>
   </body>
 </html>
 {% endblock body %}

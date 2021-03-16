@@ -56,11 +56,14 @@ app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
 
 
 class CustomerTable(db.Model):
-    name = db.Column(db.String(30), nullable=False, primary_key=True)
+    customer_id = db.Column(db.Integer, primary_key=True)
+    first_name = db.Column(db.String(30), nullable=False)
+    last_name = db.Column(db.String(30), nullable=False)
     is_old_enough = db.Column(db.Boolean, nullable=False)
 
 class CustomerForm(FlaskForm):
-    name = StringField('Full Name ')
+    first_name = StringField('First Name ')
+    last_name = StringField('Last Name ')
     is_old_enough = BooleanField('Is over 18')
     submit = SubmitField('Enter Details')
 
@@ -86,7 +89,7 @@ def homepage():
 def add_bartender():
     return render_template('bartender.html', title="Bartender")
 
-@app.route('/customerview', methods=['GET', 'POST'])
+@app.route('/customer/view', methods=['GET', 'POST'])
 def customer_view():
     return render_template('customerview.html', title="Customer View")
 
@@ -95,24 +98,41 @@ def add_customer():
     error = ""
     form = CustomerForm()
     all_customers = CustomerTable.query.all()
-   
     if request.method == 'POST':
-        name = form.name.data
+        first_name = form.first_name.data
+        last_name = form.last_name.data
         is_old_enough = form.is_old_enough.data
-        person = CustomerTable(name=form.name.data, is_old_enough=form.is_old_enough.data )
-
-        if len(name) == 0:
-            error = "Please enter your name"
+        person = CustomerTable(first_name=form.first_name.data, last_name=form.last_name.data, is_old_enough=form.is_old_enough.data )
+        
+        if len(first_name) == 0:
+            error = "Please enter your first name"
+        elif len(last_name) == 0:
+            error = "Please enter your last name"
         elif bool(is_old_enough) == False:
             error = "Not old enough"
         else:
             db.session.add(person)
             db.session.commit()
-            return render_template('customer.html', all_customers=all_customers, form=form, message=error, title="Add Customer")
-
+            return render_template('customerview.html', all_customers=all_customers, form=form, message=error, title="Add Customer")
 
 
     return render_template('customer.html', all_customers=all_customers, form=form, message=error)
+
+@app.route('/customer/update/<int:customer_id>', methods=['POST', 'GET'])
+def update_customer(customer_id):
+    customer_to_update = CustomerTable.query.get_or_404(customer_id)
+    form = CustomerForm()
+    if request.method == 'POST':
+        customer_to_update.first_name = request.form["first_name"]
+        customer_to_update.last_name = request.form["last_name"]
+        try:
+            db.session.commit()
+            return redirect('/customer')
+        except:
+            return "Update Unsuccessful"
+    else:
+        return render_template('customerupdate.html', customer_to_update=customer_to_update)
+
 
 db.create_all()
 
