@@ -1,0 +1,13 @@
+{% extends 'main.html' %}
+{% block body %}
+    <div class= "container">
+        <h2>Update Customer</h2>
+        <br>
+        <form action='{{customer_to_update.customer_id}}'
+        METHOD="POST">
+            <input type="text" placeholder="first_name" name="first_name" value="{{customer_to_update.first_name}}">
+            <input type="text" placeholder="last_name" name="last_name" value="{{customer_to_update.last_name}}">
+            <input type="submit" value="Update Name"> 
+        </form>
+    </div>
+{% endblock body %}

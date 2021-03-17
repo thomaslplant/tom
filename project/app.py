@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, request, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField, DateField, FloatField
+from wtforms import StringField, SubmitField, BooleanField, DateField, FloatField, IntegerField, DateTimeField
 
 app = Flask(__name__)
 db = SQLAlchemy(app)
@@ -9,49 +9,6 @@ db = SQLAlchemy(app)
 # # app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:root@34.89.77.106/CocktailBar"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS']=False
 app.config['SQLALchemy_DATABASE_URI'] = "sqlite:///data.db"
-# app.config['SECRET_KEY'] = "TEST"
-
-
-# class Customer(db.Model):
-#     customer_id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(50), nullable=False)
-#     is_old_enough = db.Column(db.Boolean, nullable=False)
-    
-
-# class Bartender(db.Model):
-#     employee_id = db.Column(db.Integer, primary_key=True)
-#     name = db.Column(db.String(50), nullable=False)
-#     start_date = db.Column(db.Date, nullable=False)
-#     position = db.Column(db.String(50), nullable=False)
-#     rate_of_pay = db.Column(db.Float, nullable=False)
-
-# class Drinks(db.Model):
-#     beverage_id = db.Column(db.Integer, primary_key=True)
-#     beverage_name = db.Column(db.String(50), nullable=False)
-#     price = db.Column(db.Float, nullable=False)
-#     alcohol_percent = db.Column(db.Float, nullable=False)
-#     units_of_alcohol = db.Column(db.Float, nullable=False)
-
-# class Payment(db.Model):
-#     payment_id = db.Column(db.Integer, primary_key=True)
-#     payment_type = db.Column(db.String(30), nullable=False)
-#     bank = db.Column(db.String(30), nullable=True)
-#     account_number = db.Column(db.Integer, nullable=True)
-#     sort_code = db.Column(db.Integer, nullable=True)
-#     cvv = db.Column(db.Integer, nullable=True)
-
-# class Orders(db.Model):
-#     order_id = db.Column(db.Integer, primary_key=True)
-#     quantity = db.Column(db.Integer, nullable = False)
-#     order_cost = db.Column(db.Float, nullable=False)
-#     datetime_of_order = db.Column(db.DateTime, nullable=False)
-#     customer_id = db.Column('customer_id', db.Integer, db.ForeignKey('customer.customer_id'))
-#     beverage_id = db.Column('beverage_id', db.Integer, db.ForeignKey('drinks.beverage_id'))
-#     employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('bartender.employee_id'))
-#     payment_id = db.Column('payment_id', db.Integer, db.ForeignKey('payment.payment_id'))
-
-# from application import routes
-
 app.config['SECRET_KEY'] = 'YOUR_SECRET_KEY'
 
 
@@ -95,6 +52,36 @@ class DrinksForm(FlaskForm):
     units_of_alcohol = FloatField('Units')
     submit = SubmitField('Enter details')
 
+class PaymentTable(db.Model):
+    payment_id = db.Column(db.Integer, primary_key=True)
+    payment_type = db.Column(db.String(30), nullable=False)
+    bank = db.Column(db.String(30), nullable=True)
+    account_number = db.Column(db.Integer, nullable=True)
+    sort_code = db.Column(db.Integer, nullable=True)
+    cvv = db.Column(db.Integer, nullable=True)
+
+class PaymentForm(FlaskForm):
+    payment_type = StringField('Payment Type')
+    bank = StringField('Bank')
+    account_number = IntegerField('Account Number')
+    sort_code = IntegerField('Sort Code')
+    cvv = IntegerField('CVV')
+    submit = SubmitField('Enter payment details')
+
+class OrdersTable(db.Model):
+    order_id = db.Column(db.Integer, primary_key=True)
+    quantity = db.Column(db.Integer, nullable = False)
+    order_cost = db.Column(db.Float, nullable=False)
+    datetime_of_order = db.Column(db.String(25), nullable=False)
+    customer_id = db.Column('customer_id', db.Integer, db.ForeignKey('customer.customer_id'))
+    beverage_id = db.Column('beverage_id', db.Integer, db.ForeignKey('drinks.beverage_id'))
+    employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('bartender.employee_id'))
+    payment_id = db.Column('payment_id', db.Integer, db.ForeignKey('payment.payment_id'))
+
+class OrdersForm(FlaskForm):
+    quantity = IntegerField('How many Items')
+    order_cost = FloatField('Total order cost')
+    datetime_of_order = StringField('Date and Time of order')
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -278,5 +265,130 @@ def delete_drink(beverage_id):
     except:
         return "The Drink couldn't be deleted!"
 
+@app.route('/payment/view', methods=['GET', 'POST'])
+def payment_view():
+    return render_template('paymentview.html', title="Payment View")
+
+@app.route('/payment', methods=['GET', 'POST'])
+def add_payment():
+    error = ""
+    form = PaymentForm()
+    all_payments = PaymentTable.query.all()
+    if request.method == 'POST':
+        payment_type = form.payment_type.data
+        bank = form.bank.data
+        account_number = form.account_number.data
+        sort_code = form.sort_code.data
+        cvv = form.cvv.data
+        payment_method = PaymentTable(payment_type=form.payment_type.data, bank=form.bank.data, account_number=form.account_number.data, sort_code=form.sort_code.data, cvv=form.cvv.data)
+        
+        if payment_type == "Cash":
+            db.session.add(payment_method)
+            db.session.commit()
+            return render_template('paymentview.html', all_payments=all_payments, form=form, message=error, title="Add Payment")
+        else:
+            if len(payment_type) == 0:
+                error = "Please enter the payment type"
+            elif len(bank) == 0:
+                error = "Please enter the bank name"
+            elif int(account_number) <= 9999999:
+                error = "Account number needs to be 8 digits"
+            elif int(sort_code) <= 99999:
+                error = "Sort code needs to be 6 digits"
+            elif int(cvv) <= 99:
+                error = "Please enter the CVV"
+            else:
+                db.session.add(payment_method)
+                db.session.commit()
+                return render_template('paymentview.html', all_payments=all_payments, form=form, message=error, title="Add Payment")
+
+
+    return render_template('payment.html', all_payments=all_payments, form=form, message=error)
+
+@app.route('/payment/update/<int:payment_id>', methods=['POST', 'GET'])
+def update_payment(payment_id):
+    payment_to_update = PaymentTable.query.get_or_404(payment_id)
+    form = PaymentForm()
+    if request.method == 'POST':
+        payment_to_update.payment_type = request.form["payment_type"]
+        payment_to_update.bank = request.form["bank"]
+        payment_to_update.account_number = request.form["account_number"]
+        payment_to_update.sort_code = request.form["sort_code"]
+        payment_to_update.cvv = request.form["cvv"]
+        try:
+            db.session.commit()
+            return redirect('/payment')
+        except:
+            return "Update Unsuccessful"
+    else:
+        return render_template('paymentupdate.html', payment_to_update=payment_to_update)
+
+@app.route('/payment/delete/<int:payment_id>')
+def delete_payment(payment_id):
+    payment_to_delete = PaymentTable.query.get_or_404(payment_id)
+
+    try:
+        db.session.delete(payment_to_delete)
+        db.session.commit()
+        return redirect('/customer')
+    except:
+        return "The Payment couldn't be deleted!"
+
+@app.route('/orders/view', methods=['GET', 'POST'])
+def orders_view():
+    return render_template('ordersview.html', title="Orders View")
+
+@app.route('/orders', methods=['GET', 'POST'])
+def add_orders():
+    error = ""
+    form = OrdersForm()
+    all_orders = OrdersTable.query.all()
+    if request.method == 'POST':
+        quanitity = form.quanitity.data
+        order_cost = form.order_cost.data
+        datetime_of_order = form.datetime_of_order.data
+        whole_order = OrdersTable(quanitity=form.quanitity.data, order_cost=form.order_cost.data, datetime_of_order=form.datetime_of_order.data)
+        
+        if int(quanitity) <= 0:
+            error = "Please enter your first name"
+        elif float(order_cost) == 0:
+            error = "Please enter your last name"
+        elif len(datetime_of_order) <= 19:
+            error = "Please enter Date and Time (DD/MM/YYYY HH:MM:SS)"
+        else:
+            db.session.add(whole_order)
+            db.session.commit()
+            return render_template('ordersview.html', all_orders=all_orders, form=form, message=error, title="Add Orders")
+
+
+    return render_template('orders.html', all_orders=all_orders, form=form, message=error)
+
+@app.route('/orders/update/<int:order_id>', methods=['POST', 'GET'])
+def update_order(order_id):
+    order_to_update = OrdersTable.query.get_or_404(order_id)
+    form = OrdersForm()
+    if request.method == 'POST':
+        order_to_update.quantity = request.form["quantity"]
+        order_to_update.order_cost = request.form["order_cost"]
+        order_to_update.datetime_of_order = request.form["datetime_of_order"]
+        try:
+            db.session.commit()
+            return redirect('/orders')
+        except:
+            return "Update to Orders Unsuccessful"
+    else:
+        return render_template('ordersupdate.html', order_to_update=order_to_update)
+
+@app.route('/orders/delete/<int:order_id>')
+def delete_order(order_id):
+    order_to_delete = OrdersTable.query.get_or_404(order_id)
+
+    try:
+        db.session.delete(order_to_delete)
+        db.session.commit()
+        return redirect('/orders')
+    except:
+        return "The Order couldn't be deleted!"
+        
 if __name__=='__main__':
     app.run(debug=True, host='0.0.0.0')

@@ -1,0 +1,16 @@
+{% extends 'main.html' %}
+{% block body %}
+    <div class= "container">
+        <h2>Update Payment</h2>
+        <br>
+        <form action='{{payment_to_update.payment_id}}'
+        METHOD="POST">
+            <input type="text" placeholder="payment_type" name="payment_type" value="{{payment_to_update.payment_type}}">
+            <input type="text" placeholder="bank" name="bank" value="{{payment_to_update.bank}}">
+            <input type="number" placeholder="account_number" name="account_number" value="{{payment_to_update.account_number}}">
+            <input type="number" placeholder="sort_code" name="sort_code" value="{{payment_to_update.sort_code}}">
+            <input type="number" placeholder="cvv" name="cvv" value="{{payment_to_update.cvv}}">
+            <input type="submit" value="Update Payment Details"> 
+        </form>
+    </div>
+{% endblock body %}
