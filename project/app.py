@@ -70,16 +70,31 @@ class CustomerForm(FlaskForm):
 class BartenderTable(db.Model):
     employee_id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
-    start_date = db.Column(db.Date, nullable=False)
+    start_date = db.Column(db.String(11), nullable=False)
     position = db.Column(db.String(50), nullable=False)
     rate_of_pay = db.Column(db.Float, nullable=False)
 
 class BartenderForm(FlaskForm):
-    name = StringField('Employee name')
-    start_date = DateField('Start date')
-    position = StringField('Employee position')
+    name = StringField('Full name')
+    start_date = StringField('Start date')
+    position = StringField('Position    ')
     rate_of_pay = FloatField('Hourly pay')
     submit = SubmitField('Enter details')
+
+class DrinksTable(db.Model):
+    beverage_id = db.Column(db.Integer, primary_key=True)
+    beverage_name = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    alcohol_percent = db.Column(db.Float, nullable=False)
+    units_of_alcohol = db.Column(db.Float, nullable=False)
+
+class DrinksForm(FlaskForm):
+    beverage_name = StringField('Name of Drink')
+    price = FloatField('Price')
+    alcohol_percent = FloatField('Percentage')
+    units_of_alcohol = FloatField('Units')
+    submit = SubmitField('Enter details')
+
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -160,9 +175,11 @@ def add_bartender():
         
         if len(name) == 0:
             error = "Please enter your full name"
+        elif len(start_date) < 10:
+            error = "Please enter full date (DD/MM/YYYY)"
         elif len(position) == 0:
             error = "Please enter your position/job title"
-        elif float(rate_of_pay) == 0.00:
+        elif float(rate_of_pay) <= 0.00:
             error = "Please enter your hourly pay"
         else:
             db.session.add(employee)
@@ -184,7 +201,7 @@ def update_bartender(employee_id):
             db.session.commit()
             return redirect('/bartender')
         except:
-            return "Update Unsuccessful"
+            return "Bartender Update Unsuccessful"
     else:
         return render_template('bartenderupdate.html', bartender_to_update=bartender_to_update)
 
@@ -201,6 +218,65 @@ def delete_bartender(employee_id):
 
 db.create_all()
 
+@app.route('/drinks/view', methods=['GET', 'POST'])
+def drinks_view():
+    return render_template('drinksview.html', title="Drinks View")
+
+@app.route('/drinks', methods=['GET', 'POST'])
+def add_drink():
+    error = ""
+    form = DrinksForm()
+    all_drinks = DrinksTable.query.all()
+    if request.method == 'POST':
+        beverage_name = form.beverage_name.data
+        price = form.price.data
+        alcohol_percent = form.alcohol_percent.data
+        units_of_alcohol = form.units_of_alcohol.data
+        drink = DrinksTable(beverage_name=form.beverage_name.data, price=form.price.data, alcohol_percent=form.alcohol_percent.data, units_of_alcohol=form.units_of_alcohol.data)
+        
+        if len(beverage_name) == 0:
+            error = "Please enter the name of the drink"
+        elif float(price) <= 0.00:
+            error = "Please enter the price of the drink"
+        elif float(alcohol_percent) <= 0.00:
+            error = "Please enter the alcohol percentage"
+        elif float(units_of_alcohol) <= 0.00:
+            error = "Please enter the the units of alcohol"
+        else:
+            db.session.add(drink)
+            db.session.commit()
+            return render_template('drinksview.html', all_drinks=all_drinks, form=form, message=error, title="Add Drinks")
+
+
+    return render_template('drinks.html', all_drinks=all_drinks, form=form, message=error)
+
+@app.route('/drinks/update/<int:beverage_id>', methods=['POST', 'GET'])
+def update_drink(beverage_id):
+    drink_to_update = DrinksTable.query.get_or_404(beverage_id)
+    form = DrinksForm()
+    if request.method == 'POST':
+        drink_to_update.beverage_name = request.form["beverage_name"]
+        drink_to_update.price = request.form["price"]
+        drink_to_update.alcohol_percent = request.form["alcohol_percent"]
+        drink_to_update.units_of_alcohol = request.form["units_of_alcohol"]
+        try:
+            db.session.commit()
+            return redirect('/drinks')
+        except:
+            return "Update Unsuccessful"
+    else:
+        return render_template('drinksupdate.html', drink_to_update=drink_to_update)
+
+@app.route('/drinks/delete/<int:beverage_id>')
+def delete_drink(beverage_id):
+    drink_to_delete = DrinksTable.query.get_or_404(beverage_id)
+
+    try:
+        db.session.delete(drink_to_delete)
+        db.session.commit()
+        return redirect('/drinks')
+    except:
+        return "The Drink couldn't be deleted!"
 
 if __name__=='__main__':
     app.run(debug=True, host='0.0.0.0')
