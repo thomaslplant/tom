@@ -1,43 +1,36 @@
-# Project - Thomas Plant
+# Thomas Plant - Bar Project
 
-My project idea, is to make a system for an automated cocktail bar, incorporating customers, orders, what goes into each drink, and payment. It should include a database using relationships to tie at least 2 of the tables together, a functioning front-end website that will encorporate CRUD application, and a Kanban board made using Trello to document everything that needs to be done and what is still yet to be completed.
-### What tables will I need?
+### Project Overview
+For my project I have decided to base it on a bar computer sysetem, incorporating multiple database with multiple tables with at least one relationship between two of them, a front end web application with CRUD functionality using python and flask, as well as providing sufficient testing and overall documentation of the project, including a Trello kanban-style board to track everything that needs to be done and what has already been completed. 
+
+### What I will be using to complete this project
+To complete this project to a high standard I will be using various programs, languages and systems and utilise all of the various tools that they offer. Some of which will be:
+* Python
+* Git
+* Visual Studio Code
+* Github
+* Trello
+* Flask
+* HTML
+* Google Cloud Platform
+Many of these programs and systems work symbiotically so it will not only make the project work more efficiently but it will also utilise many of the tools and capabilities available by using them.
+
+### Creating a Virtual Machine
+By using a virtaul machine (VM), it allows you to store the code and the system externally, so not only does it save you having to use all your own storage space and RAM, but it also allows you to access it from anywhere so it means that the application will be much more flexible and universal.
+### Creating the Databases
+For the database I will include a 5 tables:
 * Customer
-* Order
+* Bartender
 * Drinks
 * Payment
-* Bartender  
+* Orders
 
+The Orders table will include the relationships and foreign keys, displaying the specific ID numbers that link to each of the other tables (Customer_ID, Employee_ID, etc.) These tables will also need to have complete CRUD functionality so they will need to be updatable from the web application, meaning there will be many different pages, forms and templates used so that the web page is easily navigated and simple to use.  
 
-![datatables](https://user-images.githubusercontent.com/79214361/110125741-965d8600-7dbb-11eb-9f87-58687a695df6.png)  
+![datatables](https://user-images.githubusercontent.com/79214361/110125741-965d8600-7dbb-11eb-9f87-58687a695df6.png) 
 
-Each of the different tables will contain columns that will each need to be formatted into different data types.
+### Testing
+The database will need to be tested thoroughly throughout the process to make sure that the code is reliable and doesn't contain any bugs or faults. I will ensure this by making dedicated test suites to fully test the code to make sure it works and is consistent.
 
-
-### Creating the Database
-#### Connecting the database and the virtual machine to the SQL instance
-
-![import](https://user-images.githubusercontent.com/79214361/110126068-f0f6e200-7dbb-11eb-8929-22eba9d32459.png)  
-
-These commands are importing the 'Flask' features from the flask module installed onto this virtual machine.  
-The 'app.config' commands are referencing the SQL instance, user and directory that the VM will be connecting to.  
-
-#### Designing the tables and what data/data types they will contain
- 
-![image](https://user-images.githubusercontent.com/79214361/110502835-77c8f900-80f3-11eb-8de4-4f12d565572e.png)
-
-Each column in the table is being assigned a data type depending on what type of data it is, as well as whether or not that field needs to be filled out or not. The 'ForeignKey' fields are using the data from other tables to fill in the fields.
-
-#### Creating a second module and filling the fields with data
-
-![image](https://user-images.githubusercontent.com/79214361/110130710-3bc72880-7dc1-11eb-909f-baca01a9a1e4.png)  
-
-In a seperate module, I imported all of the tables from the 'app.py' so that I could then fill them with data, without affecting the main branch.  
-
-I later found that the orders table couldn't be imported and filled in until the rest of the of the tables had been commited, assumably because it uses foreign keys from the other tables which needed to be generated before the foreign key can access it.
-
-![image](https://user-images.githubusercontent.com/79214361/110502200-e5285a00-80f2-11eb-8d80-ab5460ae60ff.png)  
-
-![image](https://user-images.githubusercontent.com/79214361/110502522-2c164f80-80f3-11eb-9d4a-c12796df3872.png)  
-
-### Testing the app.py file
+### Planning/Documentation
+Over the duration of this project I will plan each of the steps I need to complete before the end by using a Trello kanban board so that it is clearly and simply laid out, as to what I have finished and what I am still yet to complete. By doing this I will ensure that my time is managed well and ensure that everything I need to complete is finished on time. As well as this I shall be uploading all of the saved code onto Github so that it is all readily available to view, and I can see the various changes made along the way by using branching and viewing the various different commits to cleary show my working process.

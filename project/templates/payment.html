@@ -1,0 +1,60 @@
+{% extends 'main.html' %}
+{% block body %}
+<html>
+  <body>
+      <h2>Payments</h2>
+      <table border="1">
+        <col width="100">
+          <col width="115">
+            <col width="175">
+              <col width="75">
+                <col width="75">
+        <th>Payment Type</th><th>Bank</th><th>Account Number</th><th>Sort Code</th><th>CVV</th><th>Update</th><th>Delete</th>
+        {% for payment_method in all_payments %}
+          <tr>
+            <td>
+              {{payment_method.payment_type}} 
+            </td>
+            <td>
+              {{payment_method.bank}}
+            </td>
+            <td>
+              {{payment_method.account_number}}
+            </td>
+            <td>
+              {{payment_method.sort_code}}
+            </td>
+            <td>
+              {{payment_method.cvv}}
+            </td>
+            <td>
+              <a href="payment/update/{{payment_method.payment_id}}">Update</a>
+            </td>
+            <td>
+              <a href="payment/delete/{{payment_method.payment_id}}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+     <h2>Add Payment</h2>
+     <div class='form'>
+      <form method='POST' action='/payment'>
+          {{ form.hidden_tag() }}
+          {{ form.payment_type.label }}<br>{{ form.payment_type }}
+          <br>
+          {{ form.bank.label }}<br>{{form.bank }}
+          <br>
+          {{ form.account_number.label }}<br>{{ form.account_number }}
+          <br>
+          {{ form.sort_code.label }}<br>{{form.sort_code }}
+          <br>
+          {{ form.cvv.label }}<br>{{ form.cvv }}
+          <br>
+          {{ form.submit }}
+          {{ message }}
+        </form>
+      </div>
+      <a href="{{ url_for('homepage') }}">Home</a>
+  </body>
+</html>
+{% endblock body %}
