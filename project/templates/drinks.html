@@ -37,13 +37,13 @@
      <div class='form'>
       <form method='POST' action='/drinks'>
           {{ form.hidden_tag() }}
-          {{ form.beverage_name.label }}{{ form.beverage_name }}
+          {{ form.beverage_name.label }}<br>{{ form.beverage_name }}
           <br>
-          {{ form.price.label }}{{form.price }}
+          {{ form.price.label }}<br>{{form.price }}
           <br>
-          {{ form.alcohol_percent.label }}{{ form.alcohol_percent }}
+          {{ form.alcohol_percent.label }}<br>{{ form.alcohol_percent }}
           <br>
-          {{ form.units_of_alcohol.label }}{{ form.units_of_alcohol }}
+          {{ form.units_of_alcohol.label }}<br>{{ form.units_of_alcohol }}
           <br>
           {{ form.submit }}
           {{ message }}

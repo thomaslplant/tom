@@ -73,15 +73,16 @@ class OrdersTable(db.Model):
     quantity = db.Column(db.Integer, nullable = False)
     order_cost = db.Column(db.Float, nullable=False)
     datetime_of_order = db.Column(db.String(25), nullable=False)
-    customer_id = db.Column('customer_id', db.Integer, db.ForeignKey('customer.customer_id'))
-    beverage_id = db.Column('beverage_id', db.Integer, db.ForeignKey('drinks.beverage_id'))
-    employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('bartender.employee_id'))
-    payment_id = db.Column('payment_id', db.Integer, db.ForeignKey('payment.payment_id'))
+    # customer_id = db.Column('customer_id', db.Integer, db.ForeignKey('customertable.customer_id'))
+    # beverage_id = db.Column('beverage_id', db.Integer, db.ForeignKey('drinkstable.beverage_id'))
+    # employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('bartendertable.employee_id'))
+    # payment_id = db.Column('payment_id', db.Integer, db.ForeignKey('paymenttable.payment_id'))
 
 class OrdersForm(FlaskForm):
     quantity = IntegerField('How many Items')
     order_cost = FloatField('Total order cost')
     datetime_of_order = StringField('Date and Time of order')
+    submit = SubmitField('Enter Order details')
 
 @app.route('/', methods=['GET', 'POST'])
 def homepage():
@@ -344,16 +345,16 @@ def add_orders():
     form = OrdersForm()
     all_orders = OrdersTable.query.all()
     if request.method == 'POST':
-        quanitity = form.quanitity.data
+        quantity = form.quantity.data
         order_cost = form.order_cost.data
         datetime_of_order = form.datetime_of_order.data
-        whole_order = OrdersTable(quanitity=form.quanitity.data, order_cost=form.order_cost.data, datetime_of_order=form.datetime_of_order.data)
+        whole_order = OrdersTable(quantity=form.quantity.data, order_cost=form.order_cost.data, datetime_of_order=form.datetime_of_order.data)
         
-        if int(quanitity) <= 0:
+        if int(quantity) <= 0:
             error = "Please enter your first name"
         elif float(order_cost) == 0:
             error = "Please enter your last name"
-        elif len(datetime_of_order) <= 19:
+        elif len(datetime_of_order) < 19:
             error = "Please enter Date and Time (DD/MM/YYYY HH:MM:SS)"
         else:
             db.session.add(whole_order)
@@ -364,7 +365,7 @@ def add_orders():
     return render_template('orders.html', all_orders=all_orders, form=form, message=error)
 
 @app.route('/orders/update/<int:order_id>', methods=['POST', 'GET'])
-def update_order(order_id):
+def update_orders(order_id):
     order_to_update = OrdersTable.query.get_or_404(order_id)
     form = OrdersForm()
     if request.method == 'POST':
@@ -380,7 +381,7 @@ def update_order(order_id):
         return render_template('ordersupdate.html', order_to_update=order_to_update)
 
 @app.route('/orders/delete/<int:order_id>')
-def delete_order(order_id):
+def delete_orders(order_id):
     order_to_delete = OrdersTable.query.get_or_404(order_id)
 
     try:
@@ -389,6 +390,6 @@ def delete_order(order_id):
         return redirect('/orders')
     except:
         return "The Order couldn't be deleted!"
-        
+
 if __name__=='__main__':
     app.run(debug=True, host='0.0.0.0')

@@ -38,13 +38,13 @@
      <div class='form'>
       <form method='POST' action='/bartender'>
           {{ form.hidden_tag() }}
-          {{ form.name.label }}{{ form.name }}
+          {{ form.name.label }}<br>{{ form.name }}
           <br>
-          {{ form.start_date.label }}{{ form.start_date }}
+          {{ form.start_date.label }}<br>{{ form.start_date }}
           <br>
-          {{ form.position.label }}{{ form.position }}
+          {{ form.position.label }}<br>{{ form.position }}
           <br>
-          {{ form.rate_of_pay.label }}{{ form.rate_of_pay }}
+          {{ form.rate_of_pay.label }}<br>{{ form.rate_of_pay }}
           <br>
           {{ form.submit }}
           {{ message }}

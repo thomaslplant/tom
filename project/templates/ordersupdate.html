@@ -1,12 +1,13 @@
 {% extends 'main.html' %}
 {% block body %}
     <div class= "container">
-        <h2>Update Customer</h2>
+        <h2>Update Order</h2>
         <br>
-        <form action='{{customer_to_update.customer_id}}'
+        <form action='{{order_to_update.order_id}}'
         METHOD="POST">
-            <input type="text" placeholder="first_name" name="first_name" value="{{customer_to_update.first_name}}">
-            <input type="text" placeholder="last_name" name="last_name" value="{{customer_to_update.last_name}}">
+            <input type="number" placeholder="quantity" name="quantity" value="{{order_to_update.quantity}}">
+            <input type="number" step="0.01" placeholder="order_cost" name="order_cost" value="{{order_to_update.order_cost}}">
+            <input type="text" placeholder="datetime_of_order" name="datetime_of_order" value="{{order_to_update.datetime_of_order}}">
             <input type="submit" value="Update Name"> 
         </form>
     </div>

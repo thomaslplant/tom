@@ -2,43 +2,43 @@
 {% block body %}
 <html>
   <body>
-      <h2>Customers</h2>
+      <h2>Orders</h2>
       <table border="1">
         <col width="100">
           <col width="115">
-            <col width="175">
+            <col width="200">
               <col width="75">
                 <col width="75">
-        <th>First Name</th><th>Second Name</th><th>Is old enough to drink</th><th>Update</th><th>Delete</th>
-        {% for person in all_customers %}
+        <th>Quantity</th><th>Order Cost</th><th>Date and Time of Order</th><th>Update</th><th>Delete</th>
+        {% for whole_order in all_orders %}
           <tr>
             <td>
-              {{person.first_name}} 
+              {{whole_order.quantity}} 
             </td>
             <td>
-              {{person.last_name}}
+              {{whole_order.order_cost}}
             </td>
             <td>
-              {{person.is_old_enough}}
+              {{whole_order.datetime_of_order}}
             </td>
             <td>
-              <a href="customer/update/{{person.customer_id}}">Update</a>
+              <a href="orders/update/{{whole_order.order_id}}">Update</a>
             </td>
             <td>
-              <a href="customer/delete/{{person.customer_id}}">Delete</a>
+              <a href="orders/delete/{{whole_order.order_id}}">Delete</a>
             </td>
           </tr>
         {% endfor %}
      </table>
-     <h2>Add Customer</h2>
+     <h2>Add Order</h2>
      <div class='form'>
       <form method='POST' action='/orders'>
           {{ form.hidden_tag() }}
-          {{ form.first_name.label }}{{ form.first_name }}
+          {{ form.quantity.label }}<br>{{ form.quantity }}
           <br>
-          {{ form.last_name.label }}{{form.last_name }}
+          {{ form.order_cost.label }}<br>{{form.order_cost }}
           <br>
-          {{ form.is_old_enough.label }}{{ form.is_old_enough }}
+          {{ form.datetime_of_order.label }}<br>{{ form.datetime_of_order }}
           <br>
           {{ form.submit }}
           {{ message }}

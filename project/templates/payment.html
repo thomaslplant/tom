@@ -40,15 +40,15 @@
      <div class='form'>
       <form method='POST' action='/payment'>
           {{ form.hidden_tag() }}
-          {{ form.payment_type.label }}{{ form.payment_type }}
+          {{ form.payment_type.label }}<br>{{ form.payment_type }}
           <br>
-          {{ form.bank.label }}{{form.bank }}
+          {{ form.bank.label }}<br>{{form.bank }}
           <br>
-          {{ form.account_number.label }}{{ form.account_number }}
+          {{ form.account_number.label }}<br>{{ form.account_number }}
           <br>
-          {{ form.sort_code.label }}{{form.sort_code }}
+          {{ form.sort_code.label }}<br>{{form.sort_code }}
           <br>
-          {{ form.cvv.label }}{{ form.cvv }}
+          {{ form.cvv.label }}<br>{{ form.cvv }}
           <br>
           {{ form.submit }}
           {{ message }}
