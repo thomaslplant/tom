@@ -34,7 +34,3 @@ class OrdersTable(db.Model):
     quantity = db.Column(db.Integer, nullable = False)
     order_cost = db.Column(db.Float, nullable=False)
     datetime_of_order = db.Column(db.String(25), nullable=False)
-    # customer_id = db.Column('customer_id', db.Integer, db.ForeignKey('customertable.customer_id'))
-    # beverage_id = db.Column('beverage_id', db.Integer, db.ForeignKey('drinkstable.beverage_id'))
-    # employee_id = db.Column('employee_id', db.Integer, db.ForeignKey('bartendertable.employee_id'))
-    # payment_id = db.Column('payment_id', db.Integer, db.ForeignKey('paymenttable.payment_id'))

@@ -19,7 +19,6 @@ class TestBase(TestCase):
         test2 = BartenderTable(name="Peter Wilson", start_date="2018-01-31", position="Team Leader", rate_of_pay=9.40)
         test3 = DrinksTable(beverage_name="Peroni", price=3.99, alcohol_percent=5.0, units_of_alcohol=1.7)
         test4 = PaymentTable(payment_type="Debit Card", bank="Barclays", account_number=18231723, sort_code=128374, cvv=987)
-        # test6 = CustomerTable(first_name="", last_name="Brown", is_old_enough=True)
         
         db.session.add(test1)
         db.session.add(test2)
