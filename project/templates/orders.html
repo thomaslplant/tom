@@ -1,0 +1,50 @@
+{% extends 'main.html' %}
+{% block body %}
+<html>
+  <body>
+      <h2>Orders</h2>
+      <table border="1">
+        <col width="100">
+          <col width="115">
+            <col width="200">
+              <col width="75">
+                <col width="75">
+        <th>Quantity</th><th>Order Cost</th><th>Date and Time of Order</th><th>Update</th><th>Delete</th>
+        {% for whole_order in all_orders %}
+          <tr>
+            <td>
+              {{whole_order.quantity}} 
+            </td>
+            <td>
+              {{whole_order.order_cost}}
+            </td>
+            <td>
+              {{whole_order.datetime_of_order}}
+            </td>
+            <td>
+              <a href="orders/update/{{whole_order.order_id}}">Update</a>
+            </td>
+            <td>
+              <a href="orders/delete/{{whole_order.order_id}}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+     <h2>Add Order</h2>
+     <div class='form'>
+      <form method='POST' action='/orders'>
+          {{ form.hidden_tag() }}
+          {{ form.quantity.label }}<br>{{ form.quantity }}
+          <br>
+          {{ form.order_cost.label }}<br>{{form.order_cost }}
+          <br>
+          {{ form.datetime_of_order.label }}<br>{{ form.datetime_of_order }}
+          <br>
+          {{ form.submit }}
+          {{ message }}
+        </form>
+      </div>
+      <a href="{{ url_for('homepage') }}">Home</a>
+  </body>
+</html>
+{% endblock body %}

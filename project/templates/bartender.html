@@ -1,0 +1,56 @@
+{% extends 'main.html' %}
+{% block body %}
+<html>
+  <body>
+      <h2>Bartenders</h2>
+      <table border="1">
+        <col width="115">
+          <col width="100">
+            <col width="115">
+              <col width="110">
+                <col width="75">
+                  <col width="75">
+        <th>Full Name</th><th>Start Date</th><th>Position</th><th>Rate of Pay</th><th>Update</th><th>Delete</th>
+        {% for employee in all_bartenders %}
+          <tr>
+            <td>
+              {{employee.name}} 
+            </td>
+            <td>
+              {{employee.start_date}}
+            </td>
+            <td>
+              {{employee.position}}
+            </td>
+            <td>
+              {{employee.rate_of_pay}}
+            </td>
+            <td>
+              <a href="bartender/update/{{employee.employee_id}}">Update</a>
+            </td>
+            <td>
+              <a href="bartender/delete/{{employee.employee_id}}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+     <h2>Add Employee</h2>
+     <div class='form'>
+      <form method='POST' action='/bartender'>
+          {{ form.hidden_tag() }}
+          {{ form.name.label }}<br>{{ form.name }}
+          <br>
+          {{ form.start_date.label }}<br>{{ form.start_date }}
+          <br>
+          {{ form.position.label }}<br>{{ form.position }}
+          <br>
+          {{ form.rate_of_pay.label }}<br>{{ form.rate_of_pay }}
+          <br>
+          {{ form.submit }}
+          {{ message }}
+        </form>
+      </div>
+      <a href="{{ url_for('homepage') }}">Home</a>
+  </body>
+</html>
+{% endblock body %}

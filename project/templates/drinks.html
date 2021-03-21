@@ -1,0 +1,55 @@
+{% extends 'main.html' %}
+{% block body %}
+<html>
+  <body>
+      <h2>Drinks</h2>
+      <table border="1">
+        <col width="100">
+          <col width="115">
+            <col width="175">
+              <col width="75">
+                <col width="75">
+        <th>Beverage Name</th><th>Price</th><th>Alcohol Percent</th><th>Units of Alcohol</th><th>Update</th><th>Delete</th>
+        {% for drink in all_drinks %}
+          <tr>
+            <td>
+              {{drink.beverage_name}} 
+            </td>
+            <td>
+              {{drink.price}}
+            </td>
+            <td>
+              {{drink.alcohol_percent}}
+            </td>
+            <td>
+              {{drink.units_of_alcohol}}
+            </td>
+            <td>
+              <a href="drinks/update/{{drink.beverage_id}}">Update</a>
+            </td>
+            <td>
+              <a href="drinks/delete/{{drink.beverage_id}}">Delete</a>
+            </td>
+          </tr>
+        {% endfor %}
+     </table>
+     <h2>Add Drink</h2>
+     <div class='form'>
+      <form method='POST' action='/drinks'>
+          {{ form.hidden_tag() }}
+          {{ form.beverage_name.label }}<br>{{ form.beverage_name }}
+          <br>
+          {{ form.price.label }}<br>{{form.price }}
+          <br>
+          {{ form.alcohol_percent.label }}<br>{{ form.alcohol_percent }}
+          <br>
+          {{ form.units_of_alcohol.label }}<br>{{ form.units_of_alcohol }}
+          <br>
+          {{ form.submit }}
+          {{ message }}
+        </form>
+      </div>
+      <a href="{{ url_for('homepage') }}">Home</a>
+  </body>
+</html>
+{% endblock body %}

@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% block body %}
+    <div class= "container">
+        <h2>Update Drink</h2>
+        <br>
+        <form action='{{drink_to_update.beverage_id}}'
+        METHOD="POST">
+            <input type="text" placeholder="beverage_name" name="beverage_name" value="{{drink_to_update.beverage_name}}">
+            <input type="number" step="0.01" placeholder="price" name="price" value="{{drink_to_update.price}}">
+            <input type="number" step="0.01" placeholder="alcohol_percent" name="alcohol_percent" value="{{drink_to_update.alcohol_percent}}">
+            <input type="number" step="0.01" placeholder="units_of_alcohol" name="units_of_alcohol" value="{{drink_to_update.units_of_alcohol}}">
+            <input type="submit" value="Update Drink"> 
+        </form>
+    </div>
+{% endblock body %}

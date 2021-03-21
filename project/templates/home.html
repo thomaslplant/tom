@@ -1,9 +1,37 @@
+{% extends 'main.html' %}
+{% block body %}
 <html>
-    <head>
-        <title>Tom's Project</title>
-    </head>
+    <h2>Homepage</h2>
     <body>
-        <h1>Add Customer</h1>
-        <form method="POST" action="/"></form>
+        <p>
+            Welcome to Tom's Project Bar.
+            Please click where you would like to go.
+            <br>
+            <table>
+                <col width="105">
+                  <col width="105">
+                    <col width="110">
+                      <col width="125">
+                        <col width="120">
+            <br>
+            <tr>
+                <td>
+                  <a href="{{ url_for('add_customer') }}">Customers</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_bartender') }}">Bartenders</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_drink') }}">Drinks Menu</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_payment') }}">Payment Details</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_orders') }}">Order Information</a>
+                </td>
+            </table>
+        </p>
     </body>
-    </html>
+</html>  
+{% endblock body %}

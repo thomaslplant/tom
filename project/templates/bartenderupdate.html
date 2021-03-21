@@ -1,0 +1,15 @@
+{% extends 'main.html' %}
+{% block body %}
+    <div class= "container">
+        <h2>Update Bartender</h2>
+        <br>
+        <form action='{{bartender_to_update.employee_id}}'
+        METHOD="POST">
+            <input type="text" placeholder="name" name="name" value="{{bartender_to_update.name}}">
+            <input type="text" placeholder="start_date" name="start_date" value="{{bartender_to_update.start_date}}">
+            <input type="text" placeholder="position" name="position" value="{{bartender_to_update.position}}">
+            <input type="number" step="0.01" placeholder="rate_of_pay" name="rate_of_pay" value="{{bartender_to_update.rate_of_pay}}">
+            <input type="submit" value="Update Staff information"> 
+        </form>
+    </div>
+{% endblock body %}
