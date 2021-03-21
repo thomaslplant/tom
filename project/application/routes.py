@@ -202,21 +202,21 @@ def add_payment():
             db.session.add(payment_method)
             db.session.commit()
             return render_template('paymentview.html', all_payments=all_payments, form=form, message=error, title="Add Payment")
+        
+        if len(payment_type) == 0:
+            error = "Please enter the payment type"
+        elif len(bank) == 0:
+            error = "Please enter the bank name"
+        elif int(account_number) <= 9999999:
+            error = "Account number needs to be 8 digits"
+        elif int(sort_code) <= 99999:
+            error = "Sort code needs to be 6 digits"
+        elif int(cvv) <= 99:
+            error = "Please enter the CVV"
         else:
-            if len(payment_type) == 0:
-                error = "Please enter the payment type"
-            elif len(bank) == 0:
-                error = "Please enter the bank name"
-            elif int(account_number) <= 9999999:
-                error = "Account number needs to be 8 digits"
-            elif int(sort_code) <= 99999:
-                error = "Sort code needs to be 6 digits"
-            elif int(cvv) <= 99:
-                error = "Please enter the CVV"
-            else:
-                db.session.add(payment_method)
-                db.session.commit()
-                return render_template('paymentview.html', all_payments=all_payments, form=form, message=error, title="Add Payment")
+            db.session.add(payment_method)
+            db.session.commit()
+            return render_template('paymentview.html', all_payments=all_payments, form=form, message=error, title="Add Payment")
 
 
     return render_template('payment.html', all_payments=all_payments, form=form, message=error)
@@ -246,7 +246,7 @@ def delete_payment(payment_id):
     try:
         db.session.delete(payment_to_delete)
         db.session.commit()
-        return redirect('/customer')
+        return redirect('/payment')
     except:
         return "The Payment couldn't be deleted!"
 
@@ -263,8 +263,7 @@ def add_orders():
         quantity = form.quantity.data
         order_cost = form.order_cost.data
         datetime_of_order = form.datetime_of_order.data
-        # customer_id = form.customer_id.data
-        whole_order = OrdersTable(quantity=form.quantity.data, order_cost=form.order_cost.data, datetime_of_order=form.datetime_of_order.data)#, customer_id=form.customer_id.data)
+        whole_order = OrdersTable(quantity=form.quantity.data, order_cost=form.order_cost.data, datetime_of_order=form.datetime_of_order.data)
         
         if int(quantity) <= 0:
             error = "Please enter your first name"
@@ -287,7 +286,6 @@ def update_orders(order_id):
         order_to_update.quantity = request.form["quantity"]
         order_to_update.order_cost = request.form["order_cost"]
         order_to_update.datetime_of_order = request.form["datetime_of_order"]
-        # order_to_update.customer_id = request.form["customer_id"]
         try:
             db.session.commit()
             return redirect('/orders')

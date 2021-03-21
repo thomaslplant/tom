@@ -12,14 +12,13 @@ class TestBase(TestCase):
                 )
         return app
 
-    def test_start(self):
+    def setUp(self):
         db.create_all()
     
-        test1 = CustomerTable(first_name="Jeff", last_name="Brown", is_old_enough=True)
+        test1 = CustomerTable(first_name="Tom", last_name="Plant", is_old_enough=True)
         test2 = BartenderTable(name="Peter Wilson", start_date="2018-01-31", position="Team Leader", rate_of_pay=9.40)
         test3 = DrinksTable(beverage_name="Peroni", price=3.99, alcohol_percent=5.0, units_of_alcohol=1.7)
         test4 = PaymentTable(payment_type="Debit Card", bank="Barclays", account_number=18231723, sort_code=128374, cvv=987)
-        test6 = CustomerTable(first_name="", last_name="Brown", is_old_enough=True)
         
         db.session.add(test1)
         db.session.add(test2)
@@ -32,7 +31,7 @@ class TestBase(TestCase):
         db.session.add(test5)
         db.session.commit()
 
-    def end_test(self):
+    def tearDown(self):
         db.session.remove()
         db.drop_all()
 
@@ -41,41 +40,29 @@ class TestBase(TestCase):
 class TestCustomer(TestBase):
     def test_add_customer(self):
         response = self.client.post(url_for('add_customer', customer_id=1),
-            data = dict(first_name="James", last_name="Dean"), follow_redirects=True)
+            data = dict(first_name="Tom", last_name="Plant"), follow_redirects=True)
 class TestUpdateCustomer(TestBase):
     def test_update_customer(self):
         response = self.client.post(url_for('update_customer', customer_id=1),
             data = dict(first_name="Tom", last_name="Plant"), follow_redirects=True)
-
 class TestDeleteCustomer(TestBase):
-
     def test_delete_customer(self):
-        response = self.client.post(url_for('/delete_customer', customer_id=1),
-            data = dict(first_name="Tom", last_name="Plant"), follow_redirects=True)
-  
-        
-    # def create_app(self):
-    #     return app
-        
-    # def test_delete_customer(self):
-    #     self.client.delete('/customer/delete/<int:customer_id>')
-    #     self.assert_template_used([ ])
-    #     self.assert_context("The Customer couldn't be deleted!")
-
-
-
-
+        response = self.client.get(url_for('delete_customer', customer_id=1), follow_redirects=True)
+        assert b"Tom", response.data
 # Bartender Testing
 
 class TestBartender(TestBase):
     def test_add_bartender(self):
         response = self.client.post(url_for('add_bartender', employee_id=1),
-            data = dict(name="Phillip Jones", start_date="21/01/2019", position="Team Leader", rate_of_pay=9.45), follow_redirects=True)
+            data = dict(name="Peter Wilson", start_date="21/01/2019", position="Team Leader", rate_of_pay=9.45), follow_redirects=True)
 class TestUpdateBartender(TestBase):
     def test_update_bartender(self):
         response = self.client.post(url_for('update_bartender', employee_id=1),
-            data = dict(name="Phillip Jones", start_date="21/01/2019", position="Team Leader", rate_of_pay=9.45), follow_redirects=True)
-
+            data = dict(name="Peter Wilson", start_date="21/01/2019", position="Team Leader", rate_of_pay=9.45), follow_redirects=True)
+class TestDeleteBartender(TestBase):
+    def test_delete_bartender(self):
+        response = self.client.get(url_for('delete_bartender', employee_id=1), follow_redirects=True)
+        assert b"Peter Wilson", response.data
 
 # Drinks Testing
 
@@ -87,6 +74,10 @@ class TestUpdateDrinks(TestBase):
     def test_update_drink(self):
         response = self.client.post(url_for('update_drink', beverage_id=1),
             data = dict(beverage_name="Peroni", price=3.95, alcohol_percent=5.1, units_of_alcohol=1.5), follow_redirects=True)
+class TestDeleteDrink(TestBase):
+    def test_delete_drink(self):
+        response = self.client.get(url_for('delete_drink', beverage_id=1), follow_redirects=True)
+        assert b"Peroni", response.data
 
 # Payment Testing
 
@@ -98,7 +89,10 @@ class TestUpdatePayment(TestBase):
     def test_update_payment(self):
         response = self.client.post(url_for('update_payment', payment_id=1),
             data = dict(payment_type="Debit Card", bank="Santander", account_number=12237198, sort_code=712332, cvv=678), follow_redirects=True)
-
+class TestDeletePayment(TestBase):
+    def test_delete_payment(self):
+        response = self.client.get(url_for('delete_payment', payment_id=1), follow_redirects=True)
+        assert b"Debit Card", response.data
 # Orders Testing
 
 class TestOrders(TestBase):
@@ -109,6 +103,10 @@ class TestUpdateOrders(TestBase):
     def test_update_orders(self):
         response = self.client.post(url_for('update_orders', order_id=1),
             data = dict(quantity=1, order_cost=3.95, datetime_of_order="16/03/2021 19:21:49"), follow_redirects=True)
+class TestDeleteOrder(TestBase):
+    def test_delete_order(self):
+        response = self.client.get(url_for('delete_orders', order_id=1), follow_redirects=True)
+        assert b"1", response.data
 
 class TestReturnTemplate(TestBase):
     def create_app(self):

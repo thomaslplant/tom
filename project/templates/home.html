@@ -1,17 +1,36 @@
 {% extends 'main.html' %}
 {% block body %}
 <html>
-    <head>Homepage</head>
+    <h2>Homepage</h2>
     <body>
         <p>
             Welcome to Tom's Project Bar.
             Please click where you would like to go.
-            <br/>
-            <a href="{{ url_for('add_customer') }}">Customers</a>
-            <a href="{{ url_for('add_bartender') }}">List of employees</a>
-            <a href="{{ url_for('add_drink') }}">What drinks we serve</a>
-            <a href="{{ url_for('add_payment') }}">Customer payment details</a>
-            <a href="{{ url_for('add_orders') }}">Order information</a>
+            <br>
+            <table>
+                <col width="105">
+                  <col width="105">
+                    <col width="110">
+                      <col width="125">
+                        <col width="120">
+            <br>
+            <tr>
+                <td>
+                  <a href="{{ url_for('add_customer') }}">Customers</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_bartender') }}">Bartenders</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_drink') }}">Drinks Menu</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_payment') }}">Payment Details</a>
+                </td>
+                <td>
+                  <a href="{{ url_for('add_orders') }}">Order Information</a>
+                </td>
+            </table>
         </p>
     </body>
 </html>  
